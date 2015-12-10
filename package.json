@@ -1,0 +1,19 @@
+{
+  "name": "buglog",
+  "version": "0.0.0",
+  "description": "My replacement for console.log",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brentertz/scapegoat.git"
+  },
+  "keywords": [
+    "bug",
+    "log"
+  ],
+  "author": "John Nelson <me@johnrnelson.com> (https://www.johnrnelson.com/)",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/johnrnelson/BugLog/issues"
+  }
+}

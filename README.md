@@ -17,13 +17,12 @@ Easy debug code. :-)
  
 ## Installing
 
-    npm install https://github.com/johnrnelson/BugLog
-
+    npm install git+https://git@github.com/johnrnelson/BugLog.git
  
  
  
 ## Using
-
+http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
 
 
    

@@ -16,7 +16,7 @@ var myconf= {
 }
 
 var buglog = require('./index');
-var daLOG = buglog.Config(myconf);
+var daLOG = buglog.Config(myconf,global);
 
 // console.log(index)
 function woot(argument) {

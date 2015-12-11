@@ -77,8 +77,8 @@ var buglogAPI = {
                 '';
         };
     },
-    
-    
+
+
     //Loop through the args and figure out what to display...
     InspectArgs: function(Args2Inspect, LogRec) {
 
@@ -103,8 +103,8 @@ var buglogAPI = {
                     argsDisplay += '\r\n\t\t' + ITEM;
                 }
                 else {
-                    var jsSTR = '\t\t'+JSON.stringify(ITEM, null, "\t");
-                    argsDisplay += jsSTR.replace(/[\n]/g,'\n\t\t');
+                    var jsSTR = '\t\t' + JSON.stringify(ITEM, null, "\t");
+                    argsDisplay += jsSTR.replace(/[\n]/g, '\n\t\t');
                     // argsDisplay += '\r\n' + JSON.stringify(ITEM, null, "\t");
                 };
                 argCntr++;
@@ -134,7 +134,7 @@ var buglogAPI = {
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
                 StackRecord.DebugDisplay +
-                ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.cyan, StackRecord.ArgsDisplay));
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.cyan, StackRecord.ArgsDisplay));
         }
 
         if (TypeOfDress == LogLevels.Warn) {
@@ -144,7 +144,7 @@ var buglogAPI = {
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
                 StackRecord.DebugDisplay +
-                ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.green, StackRecord.ArgsDisplay));
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.green, StackRecord.ArgsDisplay));
         }
 
         if (TypeOfDress == LogLevels.Error) {
@@ -200,8 +200,52 @@ var ConfigManager = {
 }
 
 //If they give us a config then they can get our methods.. 
-function Config(ConfigOptions) {
+function Config(ConfigOptions, GLOBAL) {
     ConfigManager.ClientConfig = ConfigOptions;
+
+
+
+    /*
+        This is where the Magic Happens!!!!
+    */
+    var OurModDepthLevel = 3;
+    Object.defineProperty(GLOBAL, '__stack', {
+        get: function() {
+            var orig = Error.prepareStackTrace;
+            Error.prepareStackTrace = function(_, stack) {
+                return stack;
+            };
+            var err = new Error;
+            Error.captureStackTrace(err, arguments.callee);
+            var stack = err.stack;
+            Error.prepareStackTrace = orig;
+            return stack;
+        }
+    });
+
+    Object.defineProperty(GLOBAL, '__line', {
+        get: function() {
+            //If you work on buglog this number may change depending on 
+            //how you set it up...
+            return __stack[OurModDepthLevel].getLineNumber();
+        }
+    });
+
+    Object.defineProperty(GLOBAL, '__StringStack', {
+        get: function() {
+            var daStack = __stack[OurModDepthLevel];
+
+            if (!daStack) {
+                return 'Stack Count:' + __stack.length;
+            }
+            else {
+                return daStack;
+            };
+        }
+    });
+
+
+
     return Level;
 }
 
@@ -209,42 +253,3 @@ function Config(ConfigOptions) {
 exports.Config = Config;
 
 //=====
-
-/*
-    This is where the Magic Happens!!!!
-*/
-var OurModDepthLevel = 3;
-Object.defineProperty(global, '__stack', {
-    get: function() {
-        var orig = Error.prepareStackTrace;
-        Error.prepareStackTrace = function(_, stack) {
-            return stack;
-        };
-        var err = new Error;
-        Error.captureStackTrace(err, arguments.callee);
-        var stack = err.stack;
-        Error.prepareStackTrace = orig;
-        return stack;
-    }
-});
-
-Object.defineProperty(global, '__line', {
-    get: function() {
-        //If you work on buglog this number may change depending on 
-        //how you set it up...
-        return __stack[OurModDepthLevel].getLineNumber();
-    }
-});
-
-Object.defineProperty(global, '__StringStack', {
-    get: function() {
-        var daStack = __stack[OurModDepthLevel];
-
-        if (!daStack) {
-            return 'Stack Count:' + __stack.length;
-        }
-        else {
-            return daStack;
-        };
-    }
-});

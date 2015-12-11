@@ -209,7 +209,6 @@ function Config(ConfigOptions, GLOBAL) {
             This is where the Magic Happens!!!!
         */
         var OurModDepthLevel = ConfigOptions.StackDepth;
-        
       
         
         Object.defineProperty(GLOBAL, '__stack', {

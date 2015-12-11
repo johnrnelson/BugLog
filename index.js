@@ -203,47 +203,58 @@ var ConfigManager = {
 function Config(ConfigOptions, GLOBAL) {
     ConfigManager.ClientConfig = ConfigOptions;
 
+    try {
 
-
-    /*
-        This is where the Magic Happens!!!!
-    */
-    var OurModDepthLevel = 3;
-    Object.defineProperty(GLOBAL, '__stack', {
-        get: function() {
-            var orig = Error.prepareStackTrace;
-            Error.prepareStackTrace = function(_, stack) {
+        /*
+            This is where the Magic Happens!!!!
+        */
+        var OurModDepthLevel = 3;
+        
+        if(!Object){
+            console.log('***********************************************');
+        }
+        
+        Object.defineProperty(GLOBAL, '__stack', {
+            get: function() {
+                var orig = Error.prepareStackTrace;
+                Error.prepareStackTrace = function(_, stack) {
+                    return stack;
+                };
+                var err = new Error;
+                Error.captureStackTrace(err, arguments.callee);
+                var stack = err.stack;
+                Error.prepareStackTrace = orig;
                 return stack;
-            };
-            var err = new Error;
-            Error.captureStackTrace(err, arguments.callee);
-            var stack = err.stack;
-            Error.prepareStackTrace = orig;
-            return stack;
-        }
-    });
-
-    Object.defineProperty(GLOBAL, '__line', {
-        get: function() {
-            //If you work on buglog this number may change depending on 
-            //how you set it up...
-            return __stack[OurModDepthLevel].getLineNumber();
-        }
-    });
-
-    Object.defineProperty(GLOBAL, '__StringStack', {
-        get: function() {
-            var daStack = __stack[OurModDepthLevel];
-
-            if (!daStack) {
-                return 'Stack Count:' + __stack.length;
             }
-            else {
-                return daStack;
-            };
-        }
-    });
+        });
 
+        Object.defineProperty(GLOBAL, '__line', {
+            get: function() {
+                //If you work on buglog this number may change depending on 
+                //how you set it up...
+                return __stack[OurModDepthLevel].getLineNumber();
+            }
+        });
+
+        Object.defineProperty(GLOBAL, '__StringStack', {
+            get: function() {
+                var daStack = __stack[OurModDepthLevel];
+
+                if (!daStack) {
+                    return 'Stack Count:' + __stack.length;
+                }
+                else {
+                    return daStack;
+                };
+            }
+        });
+
+
+    }
+    catch (errUnableToDebug) {
+        console.log('Unable to get stack from global!!!');
+        console.log(errUnableToDebug)
+    }
 
 
     return Level;

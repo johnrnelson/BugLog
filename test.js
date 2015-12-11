@@ -12,7 +12,16 @@ function woot(argument) {
     buglog.Level.Info();
 
     buglog.Level.Info('Server using Node Version  ...');
+
+
     buglog.Level.Warn('Ver:', process.version);
+    
+    // function burp(argument) {
+    //     // body...
+    //     buglog.Level.Error('ERRRRRRRR');
+    // }
+    // burp();
+    
 };
 
 woot();

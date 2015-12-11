@@ -230,6 +230,13 @@ function Config(ConfigOptions, GLOBAL) {
             get: function() {
                 //If you work on buglog this number may change depending on 
                 //how you set it up...
+                console.log('OurModDepthLevel-'+OurModDepthLevel)
+                console.log('0--'+__stack[0].getLineNumber())
+                console.log('1--'+__stack[1].getLineNumber())
+                console.log('2--'+__stack[2].getLineNumber())
+                console.log('3--'+__stack[3].getLineNumber())
+                console.log('4--'+__stack[4].getLineNumber())
+                console.log('5--'+__stack[5].getLineNumber())
                 return __stack[OurModDepthLevel].getLineNumber();
             }
         });

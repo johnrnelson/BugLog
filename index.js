@@ -114,11 +114,20 @@ var buglogAPI = {
         // return argsDisplay;
     },
     InspectStack: function() {
-        return {
-            DT: new Date().toLocaleTimeString(),
-            LN: '' + __line,
-            FN: '' + __StringStack //make sure it's a good string...
+
+        var st = {
+
+        };
+        try {
+            st.DT = new Date().toLocaleTimeString();
+            st.LN = '' + __line;
+            st.FN = '' + __StringStack //make sure it's a good string..;
         }
+        catch (errInspectStack) {
+            st.err = errInspectStack;
+        }
+        return st;
+
     },
     //make me pretty....
     Dressup: function(TypeOfDress, StackRecord) {
@@ -210,8 +219,8 @@ function Config(ConfigOptions, GLOBAL) {
             This is where the Magic Happens!!!!
         */
         var OurModDepthLevel = ConfigOptions.StackDepth;
-      
-        
+
+
         Object.defineProperty(GLOBAL, '__stack', {
             get: function() {
                 var orig = Error.prepareStackTrace;
@@ -230,13 +239,13 @@ function Config(ConfigOptions, GLOBAL) {
             get: function() {
                 //If you work on buglog this number may change depending on 
                 //how you set it up...
-                console.log('OurModDepthLevel-'+OurModDepthLevel)
-                console.log('0--'+__stack[0].getLineNumber())
-                console.log('1--'+__stack[1].getLineNumber())
-                console.log('2--'+__stack[2].getLineNumber())
-                console.log('3--'+__stack[3].getLineNumber())
-                console.log('4--'+__stack[4].getLineNumber())
-                console.log('5--'+__stack[5].getLineNumber())
+                console.log('OurModDepthLevel-' + OurModDepthLevel)
+                console.log('0--' + __stack[0].getLineNumber())
+                console.log('1--' + __stack[1].getLineNumber())
+                console.log('2--' + __stack[2].getLineNumber())
+                console.log('3--' + __stack[3].getLineNumber())
+                console.log('4--' + __stack[4].getLineNumber())
+                console.log('5--' + __stack[5].getLineNumber())
                 return __stack[OurModDepthLevel].getLineNumber();
             }
         });

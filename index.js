@@ -197,7 +197,8 @@ var Level = {
 var ConfigManager = {
     ClientConfig: {}, //Set when you call this bad boy.. :-)
 
-}
+};
+console.log('****************************************************')
 
 //If they give us a config then they can get our methods.. 
 function Config(ConfigOptions, GLOBAL) {

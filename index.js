@@ -240,8 +240,8 @@ exports.Config = Config;
 
         Object.defineProperty(GLOBAL, '__stack', {
             configurable: true,
-            writable: true,
-            value: function() {
+            
+            get: function() {
                 var orig = Error.prepareStackTrace;
                 Error.prepareStackTrace = function(_, stack) {
                     return stack;
@@ -256,7 +256,7 @@ exports.Config = Config;
 
         Object.defineProperty(GLOBAL, '__line', {
             configurable: true,
-            value: function() {
+            get: function() {
                 //If you work on buglog this number may change depending on 
                 //how you set it up...
                 console.log('OurModDepthLevel-' + OurModDepthLevel)
@@ -272,7 +272,7 @@ exports.Config = Config;
 
         Object.defineProperty(GLOBAL, '__StringStack', {
             configurable: true,
-            value: function() {
+            get: function() {
                 var daStack = __stack[OurModDepthLevel];
 
                 if (!daStack) {

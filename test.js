@@ -4,6 +4,7 @@
     
 */
 
+
 var myconf= { 
     ShowDebugInfo:true,
     OnLog:function(LogRecord){

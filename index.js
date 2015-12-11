@@ -1,15 +1,14 @@
-
 /*
     Easy debug output to console in a readable manner. Make sure to report
     which script did it so you don't have to hunt that bad boy down...
 */
 
-const EOL = '\r\n<<______________________________________>>';
-
+// const EOL = '\r\n<<______________________________________>>';
+var os = require('os');
 const LogLevels = {
-    Info:0,
-    Warn:1,
-    Error:2,
+    Info: 0,
+    Warn: 1,
+    Error: 2,
 };
 var buglogAPI = {
     //Color codes for the console...
@@ -43,7 +42,35 @@ var buglogAPI = {
     },
     //Process and system info.....
     DebugInfo: function() {
-        return '\r\nSystem Info.';
+        var ccs = buglogAPI.ColorCodes;
+        var mem = process.memoryUsage();
+        var Free = os.freemem();
+        var Total = os.totalmem();
+        return '\r\n' +
+
+            ccs._.UserColor(ccs.yellow, 'System Info') +
+            ccs._.UserColor(ccs.cyan, ':  RSS') +
+            ccs._.UserColor(ccs.blue, '[') +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, mem.rss)) +
+            ccs._.UserColor(ccs.blue, ']') +
+            
+            ccs._.UserColor(ccs.cyan, ':  HEAPTOTAL') +
+            ccs._.UserColor(ccs.blue, '[') +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, mem.heapTotal)) +
+            ccs._.UserColor(ccs.blue, ']') +
+            ccs._.UserColor(ccs.cyan, ':  HEAPUSED') +
+            ccs._.UserColor(ccs.blue, '[') +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, mem.heapUsed)) +
+            ccs._.UserColor(ccs.blue, ']') +
+            ccs._.UserColor(ccs.yellow, '  Free') +
+            ccs._.UserColor(ccs.blue, '[') +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, Free)) +
+            ccs._.UserColor(ccs.yellow, ']') +
+            ccs._.UserColor(ccs.yellow, '  Total') +
+            ccs._.UserColor(ccs.blue, '[') +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, Total)) +
+            ccs._.UserColor(ccs.yellow, ']') +
+            '';
     },
     //Loop through the args and figure out what to display...
     InspectArgs: function(Args2Inspect) {
@@ -59,7 +86,7 @@ var buglogAPI = {
             var trueArgs = arguments[0];
             for (var i = 0; i < trueArgs.length; i++) {
                 var ITEM = trueArgs[i];
-                if(trueArgs.length>1){
+                if (trueArgs.length > 1) {
                     argsDisplay += '\r\n====\tARG#:' + argCntr + '\t====';
                 }
                 if (typeof(ITEM) == 'string') {
@@ -73,51 +100,48 @@ var buglogAPI = {
         }
         return argsDisplay;
     },
-    InspectStack:function () {
+    InspectStack: function() {
         return {
-            DT:new Date().toLocaleTimeString(),
-            LN:''+__line,
-            FN:''+__StringStack //make sure it's a good string...
+            DT: new Date().toLocaleTimeString(),
+            LN: '' + __line,
+            FN: '' + __StringStack //make sure it's a good string...
         }
     },
     //make me pretty....
     Dressup: function(TypeOfDress, StackRecord) {
-        var dressedOutput = ''; 
+        var dressedOutput = '';
         var ccs = buglogAPI.ColorCodes;
 
-        
+
         if (TypeOfDress == LogLevels.Info) {
             dressedOutput = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) +
-                ':   LINE#:' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.LN)) + 
-                 '   OBJECT:' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.FN))
-                 + '' + 
-                 ccs._.UserColor(ccs.grey,StackRecord.ARGS) + EOL;
+                ':   LINE#:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
+                '   OBJECT:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
+                ccs._.UserColor(ccs.grey, StackRecord.ARGS);
         }
-        
+
         if (TypeOfDress == LogLevels.Warn) {
             dressedOutput = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) +
-                ':   LINE#:' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.LN)) + 
-                 '   OBJECT:' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.FN))
-                 + '' + 
-                 ccs._.UserColor(ccs.white,StackRecord.ARGS) + EOL;
+                ':   LINE#:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
+                '   OBJECT:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
+                ccs._.UserColor(ccs.white, StackRecord.ARGS);
         }
 
         if (TypeOfDress == LogLevels.Error) {
             dressedOutput = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) +
-                ':   LINE#:' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.LN)) + 
-                 '   OBJECT:' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.red, StackRecord.FN))
-                 + '' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.red,StackRecord.ARGS) + EOL);
-        }; 
+                ':   LINE#:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
+                '   OBJECT:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.FN)) + '' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ARGS));
+        };
         return dressedOutput;
     },
-    WriteLog:function (LogEntry) {
+    WriteLog: function(LogEntry) {
         // console.log(LogEntry);
         console.log(LogEntry.Display);
     }

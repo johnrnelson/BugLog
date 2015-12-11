@@ -210,9 +210,7 @@ function Config(ConfigOptions, GLOBAL) {
         */
         var OurModDepthLevel = 3;
         
-        if(!Object){
-            console.log('***********************************************');
-        }
+      
         
         Object.defineProperty(GLOBAL, '__stack', {
             get: function() {
@@ -252,8 +250,8 @@ function Config(ConfigOptions, GLOBAL) {
 
     }
     catch (errUnableToDebug) {
-        console.log('Unable to get stack from global!!!');
-        console.log(errUnableToDebug)
+        //This might happen when you first warm up!!!
+        // console.log(errUnableToDebug)
     }
 
 

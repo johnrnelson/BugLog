@@ -4,7 +4,7 @@
     which script did it so you don't have to hunt that bad boy down...
 */
 
-const EOL = '\r\n______________________________________';
+const EOL = '\r\n______________________________________>>';
 
 const LogLevels = {
     Info:0,

@@ -17,7 +17,7 @@ Easy debug code. :-)
  
 ## Installing
 
-    npm install git+https://git@github.com/johnrnelson/BugLog.git
+    npm install git+https://git@github.com/johnrnelson/BugLog.git --save
  
  
  

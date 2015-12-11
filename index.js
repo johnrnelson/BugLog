@@ -97,13 +97,15 @@ var buglogAPI = {
                 var ITEM = trueArgs[i];
 
                 if (trueArgs.length > 1) {
-                    argsDisplay += '\r\n====\tARG#:' + argCntr + '\t====';
+                    argsDisplay += '\r\n\t\t====\tARG#:' + argCntr + '\t====\r\n';
                 }
                 if (typeof(ITEM) == 'string') {
-                    argsDisplay += '\r\n' + ITEM;
+                    argsDisplay += '\r\n\t\t' + ITEM;
                 }
                 else {
-                    argsDisplay += '\r\n' + JSON.stringify(ITEM, null, "\t");
+                    var jsSTR = '\t\t'+JSON.stringify(ITEM, null, "\t");
+                    argsDisplay += jsSTR.replace(/[\n]/g,'\n\t\t');
+                    // argsDisplay += '\r\n' + JSON.stringify(ITEM, null, "\t");
                 };
                 argCntr++;
             };
@@ -132,7 +134,7 @@ var buglogAPI = {
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
                 StackRecord.DebugDisplay +
-                ccs._.UserColor(ccs.grey, StackRecord.ArgsDisplay);
+                ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.cyan, StackRecord.ArgsDisplay));
         }
 
         if (TypeOfDress == LogLevels.Warn) {
@@ -142,7 +144,7 @@ var buglogAPI = {
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
                 StackRecord.DebugDisplay +
-                ccs._.UserColor(ccs.white, StackRecord.ArgsDisplay);
+                ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.green, StackRecord.ArgsDisplay));
         }
 
         if (TypeOfDress == LogLevels.Error) {

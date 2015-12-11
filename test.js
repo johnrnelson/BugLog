@@ -23,7 +23,10 @@ function woot(argument) {
     // body...
     daLOG.Info();
 
-    daLOG.Info('Server using Node Version  ...');
+    daLOG.Info('INFO----Server using Node Version  ...');
+    daLOG.Warn('Warn----');
+    daLOG.Error('Error----');
+    daLOG.Info(myconf,'grr');
 
 
     // buglog.Level.Warn('Ver:', process.version);

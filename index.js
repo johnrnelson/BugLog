@@ -77,6 +77,8 @@ var buglogAPI = {
                 '';
         };
     },
+    
+    
     //Loop through the args and figure out what to display...
     InspectArgs: function(Args2Inspect, LogRec) {
 

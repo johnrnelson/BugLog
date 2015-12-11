@@ -6,7 +6,7 @@ My replacement for console.log
 - [What is this?](#what-is-this)
 - [Installation](#installing)
 - [Using](#using)
-
+- [Helpful Links?](#helpful-links)
 
 
 ## What is this?
@@ -16,13 +16,28 @@ Easy debug code. :-)
 
  
 ## Installing
+Good old NPM to the resuce! 
 
     npm install git+https://git@github.com/johnrnelson/BugLog.git --save
  
  
  
 ## Using
-http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+This is the easy way to test it out once you install it. 
 
+    var buglog = require("buglog");
+
+    var myconf= { 
+        ShowDebugInfo:true,
+        OnLog:function(LogRecord){
+            // save LogRecord any way you want...
+        }
+    };
+    var daLOG = buglog.Config(myconf);
+    buglog.Level.Warn('Ver:'+ process.version);
+
+
+## Helpful Links
+http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
 
    

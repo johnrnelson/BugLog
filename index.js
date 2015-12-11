@@ -42,34 +42,40 @@ var buglogAPI = {
     },
     //Process and system info.....
     DebugInfo: function(LogRec) {
-        var ccs = buglogAPI.ColorCodes;
-        LogRec.MemUse = process.memoryUsage();
-        LogRec.FreeMem = os.freemem();
-        LogRec.Total = os.totalmem();
-        LogRec.DebugDisplay = '\r\n\t\t' +
-            ccs._.UserColor(ccs.yellow, '') +
-            ccs._.UserColor(ccs.cyan, 'RSS:') +
-            ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.rss)) +
-            ccs._.UserColor(ccs.blue, ']') +
 
-            ccs._.UserColor(ccs.cyan, '  HEAPTOTAL:') +
-            ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.heapTotal)) +
-            ccs._.UserColor(ccs.blue, ']') +
-            ccs._.UserColor(ccs.cyan, '  HEAPUSED:') +
-            ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.heapUsed)) +
-            ccs._.UserColor(ccs.blue, ']') +
-            ccs._.UserColor(ccs.yellow, '  Free:') +
-            ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.FreeMem)) +
-            ccs._.UserColor(ccs.yellow, ']') +
-            ccs._.UserColor(ccs.yellow, '  Total:') +
-            ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.Total)) +
-            ccs._.UserColor(ccs.yellow, ']') +
-            '';
+        var ccs = buglogAPI.ColorCodes;
+        if (!ConfigManager.ClientConfig.ShowDebugInfo) {
+            LogRec.DebugDisplay = '';
+        }
+        else {
+            LogRec.MemUse = process.memoryUsage();
+            LogRec.FreeMem = os.freemem();
+            LogRec.Total = os.totalmem();
+            LogRec.DebugDisplay = '\r\n\t\t' +
+                ccs._.UserColor(ccs.yellow, '') +
+                ccs._.UserColor(ccs.cyan, 'RSS:') +
+                ccs._.UserColor(ccs.blue, '[') +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.rss)) +
+                ccs._.UserColor(ccs.blue, ']') +
+
+                ccs._.UserColor(ccs.cyan, '  HEAPTOTAL:') +
+                ccs._.UserColor(ccs.blue, '[') +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.heapTotal)) +
+                ccs._.UserColor(ccs.blue, ']') +
+                ccs._.UserColor(ccs.cyan, '  HEAPUSED:') +
+                ccs._.UserColor(ccs.blue, '[') +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.heapUsed)) +
+                ccs._.UserColor(ccs.blue, ']') +
+                ccs._.UserColor(ccs.yellow, '  Free:') +
+                ccs._.UserColor(ccs.blue, '[') +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.FreeMem)) +
+                ccs._.UserColor(ccs.yellow, ']') +
+                ccs._.UserColor(ccs.yellow, '  Total:') +
+                ccs._.UserColor(ccs.blue, '[') +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.Total)) +
+                ccs._.UserColor(ccs.yellow, ']') +
+                '';
+        };
     },
     //Loop through the args and figure out what to display...
     InspectArgs: function(Args2Inspect, LogRec) {
@@ -123,7 +129,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
-                StackRecord.DebugDisplay+
+                StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.grey, StackRecord.ArgsDisplay);
         }
 
@@ -133,7 +139,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
-                StackRecord.DebugDisplay+
+                StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.white, StackRecord.ArgsDisplay);
         }
 
@@ -143,7 +149,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.FN)) + '' +
-                StackRecord.DebugDisplay+
+                StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ArgsDisplay));
         };
         // return dressedOutput+'/t'+StackRecord.DebugDisplay;
@@ -185,7 +191,8 @@ var Level = {
 };
 
 var ConfigManager = {
-    ClientConfig: {} //Set when you call this bad boy.. :-)
+    ClientConfig: {}, //Set when you call this bad boy.. :-)
+
 }
 
 //If they give us a config then they can get our methods.. 

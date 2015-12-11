@@ -208,7 +208,7 @@ function Config(ConfigOptions, GLOBAL) {
         /*
             This is where the Magic Happens!!!!
         */
-        var OurModDepthLevel = 3;
+        var OurModDepthLevel = ConfigOptions.StackDepth;
         
       
         

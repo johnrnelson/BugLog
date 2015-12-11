@@ -6,6 +6,7 @@
 
 
 var myconf= { 
+    StackDepth:3,
     ShowDebugInfo:true,
     OnLog:function(LogRecord){
         return;

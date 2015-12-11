@@ -6,7 +6,7 @@ My replacement for console.log
 - [What is this?](#what-is-this)
 - [Installation](#installing)
 - [Using](#using)
-- [Helpful Links?](#helpful-links)
+- [Helpful Links](#helpful-links)
 
 
 ## What is this?

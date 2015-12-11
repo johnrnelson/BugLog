@@ -4,11 +4,10 @@
     
 */
 
-var myconf= {
-    ok:1,
+var myconf= { 
     ShowDebugInfo:true,
     OnLog:function(LogRecord){
-        // return;
+        return;
         console.log('================================================================================');
         console.log(LogRecord);
         console.log('================================================================================');

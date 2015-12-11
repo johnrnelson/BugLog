@@ -1,6 +1,6 @@
 {
   "name": "buglog",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "My replacement for console.log",
   "main": "index.js",
   "repository": {

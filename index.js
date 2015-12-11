@@ -214,7 +214,7 @@ exports.Config = Config;
     This is where the Magic Happens!!!!
 */
 var OurModDepthLevel = 3;
-Object.defineProperty(global, '__stack', {
+global.Object.defineProperty(global, '__stack', {
     get: function() {
         var orig = Error.prepareStackTrace;
         Error.prepareStackTrace = function(_, stack) {
@@ -228,7 +228,7 @@ Object.defineProperty(global, '__stack', {
     }
 });
 
-Object.defineProperty(global, '__line', {
+global.Object.defineProperty(global, '__line', {
     get: function() {
         //If you work on buglog this number may change depending on 
         //how you set it up...
@@ -236,7 +236,7 @@ Object.defineProperty(global, '__line', {
     }
 });
 
-Object.defineProperty(global, '__StringStack', {
+global.Object.defineProperty(global, '__StringStack', {
     get: function() {
         var daStack = __stack[OurModDepthLevel];
 

@@ -1,16 +1,16 @@
+
 /*
     Easy debug output to console in a readable manner. Make sure to report
     which script did it so you don't have to hunt that bad boy down...
 */
 
-const EOL = '\r\n_______________________________________________________';
+const EOL = '\r\n______________________________________';
 
 const LogLevels = {
     Info:0,
     Warn:1,
     Error:2,
-}
-
+};
 var buglogAPI = {
     //Color codes for the console...
     ColorCodes: {
@@ -93,7 +93,7 @@ var buglogAPI = {
                  '   OBJECT:' + 
                  ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.FN))
                  + '' + 
-                 ccs._.UserColor(ccs.grey,StackRecord.ARGS + EOL);
+                 ccs._.UserColor(ccs.grey,StackRecord.ARGS) + EOL;
         }
         
         if (TypeOfDress == LogLevels.Warn) {
@@ -103,7 +103,7 @@ var buglogAPI = {
                  '   OBJECT:' + 
                  ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.FN))
                  + '' + 
-                 ccs._.UserColor(ccs.white,StackRecord.ARGS + EOL);
+                 ccs._.UserColor(ccs.white,StackRecord.ARGS) + EOL;
         }
 
         if (TypeOfDress == LogLevels.Error) {
@@ -111,24 +111,10 @@ var buglogAPI = {
                 ':   LINE#:' + 
                  ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.LN)) + 
                  '   OBJECT:' + 
-                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, StackRecord.FN))
+                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.red, StackRecord.FN))
                  + '' + 
-                 ccs._.UserColor(ccs.magenta,StackRecord.ARGS + EOL);
-        }
-
-        // //warn
-        // if (TypeOfDress == LogLevels.Warn) {
-        //     dressedOutput = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, dt)) +
-        //         ':   LINE#:' + 
-        //          ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, __line)) + 
-        //          '   OBJECT:' + 
-        //          ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.yellow, __StringStack))
-        //          + '' + OutputValue + EOL;
-        // }
-     
-    
-  
-        // console.log(dressedOutput);
+                 ccs._.UserColor(ccs.bold,ccs._.UserColor(ccs.red,StackRecord.ARGS) + EOL);
+        }; 
         return dressedOutput;
     },
     WriteLog:function (LogEntry) {
@@ -136,9 +122,6 @@ var buglogAPI = {
         console.log(LogEntry.Display);
     }
 };
-
-
-
 
 
 var Level = {

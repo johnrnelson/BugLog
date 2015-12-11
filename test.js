@@ -16,11 +16,11 @@ function woot(argument) {
 
     buglog.Level.Warn('Ver:', process.version);
     
-    // function burp(argument) {
-    //     // body...
-    //     buglog.Level.Error('ERRRRRRRR');
-    // }
-    // burp();
+    function burp(argument) {
+        // body...
+        buglog.Level.Error('ERRRRRRRR');
+    }
+    burp();
     
 };
 

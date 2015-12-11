@@ -41,51 +41,53 @@ var buglogAPI = {
         }
     },
     //Process and system info.....
-    DebugInfo: function() {
+    DebugInfo: function(LogRec) {
         var ccs = buglogAPI.ColorCodes;
-        var mem = process.memoryUsage();
-        var Free = os.freemem();
-        var Total = os.totalmem();
-        return '\r\n' +
+        LogRec.MemUse = process.memoryUsage();
+        LogRec.FreeMem = os.freemem();
+        LogRec.Total = os.totalmem();
+        LogRec.DebugDisplay = '\r\n\t\t' +
+            ccs._.UserColor(ccs.yellow, '') +
+            ccs._.UserColor(ccs.cyan, 'RSS:') +
+            ccs._.UserColor(ccs.blue, '[') +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.rss)) +
+            ccs._.UserColor(ccs.blue, ']') +
 
-            ccs._.UserColor(ccs.yellow, 'System Info') +
-            ccs._.UserColor(ccs.cyan, ':  RSS') +
+            ccs._.UserColor(ccs.cyan, '  HEAPTOTAL:') +
             ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, mem.rss)) +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.heapTotal)) +
             ccs._.UserColor(ccs.blue, ']') +
-            
-            ccs._.UserColor(ccs.cyan, ':  HEAPTOTAL') +
+            ccs._.UserColor(ccs.cyan, '  HEAPUSED:') +
             ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, mem.heapTotal)) +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.MemUse.heapUsed)) +
             ccs._.UserColor(ccs.blue, ']') +
-            ccs._.UserColor(ccs.cyan, ':  HEAPUSED') +
+            ccs._.UserColor(ccs.yellow, '  Free:') +
             ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, mem.heapUsed)) +
-            ccs._.UserColor(ccs.blue, ']') +
-            ccs._.UserColor(ccs.yellow, '  Free') +
-            ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, Free)) +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.FreeMem)) +
             ccs._.UserColor(ccs.yellow, ']') +
-            ccs._.UserColor(ccs.yellow, '  Total') +
+            ccs._.UserColor(ccs.yellow, '  Total:') +
             ccs._.UserColor(ccs.blue, '[') +
-            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, Total)) +
+            ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.white, LogRec.Total)) +
             ccs._.UserColor(ccs.yellow, ']') +
             '';
     },
     //Loop through the args and figure out what to display...
-    InspectArgs: function(Args2Inspect) {
+    InspectArgs: function(Args2Inspect, LogRec) {
 
         var argsDisplay = '';
         var argCntr = 0;
         var trueArgs = arguments[0];
         if (trueArgs.length == 0) {
-            argsDisplay = buglogAPI.DebugInfo();
+            LogRec.TrueArgs = [];
+            // argsDisplay = buglogAPI.DebugInfo();
         }
         else {
             //we actually only get the first one and go from there.. :-)
             var trueArgs = arguments[0];
+            LogRec.TrueArgs = trueArgs;
             for (var i = 0; i < trueArgs.length; i++) {
                 var ITEM = trueArgs[i];
+
                 if (trueArgs.length > 1) {
                     argsDisplay += '\r\n====\tARG#:' + argCntr + '\t====';
                 }
@@ -98,7 +100,8 @@ var buglogAPI = {
                 argCntr++;
             };
         }
-        return argsDisplay;
+        LogRec.ArgsDisplay = argsDisplay;
+        // return argsDisplay;
     },
     InspectStack: function() {
         return {
@@ -111,39 +114,48 @@ var buglogAPI = {
     Dressup: function(TypeOfDress, StackRecord) {
         var dressedOutput = '';
         var ccs = buglogAPI.ColorCodes;
+        var dtDisplay = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) + '\t';
 
 
         if (TypeOfDress == LogLevels.Info) {
-            dressedOutput = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) +
-                ':   LINE#:' +
+            dressedOutput = dtDisplay +
+                'LINE#:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
-                ccs._.UserColor(ccs.grey, StackRecord.ARGS);
+                StackRecord.DebugDisplay+
+                ccs._.UserColor(ccs.grey, StackRecord.ArgsDisplay);
         }
 
         if (TypeOfDress == LogLevels.Warn) {
-            dressedOutput = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) +
+            dressedOutput = dtDisplay +
                 ':   LINE#:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
-                ccs._.UserColor(ccs.white, StackRecord.ARGS);
+                StackRecord.DebugDisplay+
+                ccs._.UserColor(ccs.white, StackRecord.ArgsDisplay);
         }
 
         if (TypeOfDress == LogLevels.Error) {
-            dressedOutput = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) +
+            dressedOutput = dtDisplay +
                 ':   LINE#:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.FN)) + '' +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ARGS));
+                StackRecord.DebugDisplay+
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ArgsDisplay));
         };
+        // return dressedOutput+'/t'+StackRecord.DebugDisplay;
         return dressedOutput;
     },
     WriteLog: function(LogEntry) {
-        // console.log(LogEntry);
+        //If they want to persist it then this is their chance...
+        // console.log(buglogAPI.DebugInfo()+'\r\n'+LogEntry.Display);
         console.log(LogEntry.Display);
+        if (ConfigManager.ClientConfig.OnLog) {
+            ConfigManager.ClientConfig.OnLog(LogEntry);
+        }
     }
 };
 
@@ -151,26 +163,39 @@ var buglogAPI = {
 var Level = {
     Info: function() {
         var dINFO = buglogAPI.InspectStack();
-        dINFO.ARGS = buglogAPI.InspectArgs(arguments);
+        buglogAPI.DebugInfo(dINFO);
+        buglogAPI.InspectArgs(arguments, dINFO);
         dINFO.Display = buglogAPI.Dressup(LogLevels.Info, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Warn: function() {
         var dINFO = buglogAPI.InspectStack();
-        dINFO.ARGS = buglogAPI.InspectArgs(arguments);
+        buglogAPI.DebugInfo(dINFO);
+        buglogAPI.InspectArgs(arguments, dINFO);
         dINFO.Display = buglogAPI.Dressup(LogLevels.Warn, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Error: function() {
         var dINFO = buglogAPI.InspectStack();
-        dINFO.ARGS = buglogAPI.InspectArgs(arguments);
+        buglogAPI.DebugInfo(dINFO);
+        buglogAPI.InspectArgs(arguments, dINFO);
         dINFO.Display = buglogAPI.Dressup(LogLevels.Error, dINFO);
         buglogAPI.WriteLog(dINFO);
     }
 };
 
-exports.Level = Level;
+var ConfigManager = {
+    ClientConfig: {} //Set when you call this bad boy.. :-)
+}
 
+//If they give us a config then they can get our methods.. 
+function Config(ConfigOptions) {
+    ConfigManager.ClientConfig = ConfigOptions;
+    return Level;
+}
+
+
+exports.Config = Config;
 
 //=====
 

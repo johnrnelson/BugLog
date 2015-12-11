@@ -218,7 +218,24 @@ function Config(ConfigOptions, GLOBAL) {
         /*
             This is where the Magic Happens!!!!
         */
-        var OurModDepthLevel = ConfigOptions.StackDepth;
+
+
+    }
+    catch (errUnableToDebug) {
+        //This might happen when you first warm up!!!
+        // console.log(errUnableToDebug)
+    }
+
+
+    return Level;
+}
+
+
+exports.Config = Config;
+
+//=====
+        // var OurModDepthLevel = ConfigOptions.StackDepth;
+        var OurModDepthLevel = 3;
 
 
         Object.defineProperty(GLOBAL, '__stack', {
@@ -262,19 +279,3 @@ function Config(ConfigOptions, GLOBAL) {
                 };
             }
         });
-
-
-    }
-    catch (errUnableToDebug) {
-        //This might happen when you first warm up!!!
-        // console.log(errUnableToDebug)
-    }
-
-
-    return Level;
-}
-
-
-exports.Config = Config;
-
-//=====

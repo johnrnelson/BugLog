@@ -239,6 +239,7 @@ exports.Config = Config;
 
 
         Object.defineProperty(GLOBAL, '__stack', {
+            configurable: true,
             get: function() {
                 var orig = Error.prepareStackTrace;
                 Error.prepareStackTrace = function(_, stack) {
@@ -249,10 +250,11 @@ exports.Config = Config;
                 var stack = err.stack;
                 Error.prepareStackTrace = orig;
                 return stack;
-            }
+            },
         });
 
         Object.defineProperty(GLOBAL, '__line', {
+            configurable: true,
             get: function() {
                 //If you work on buglog this number may change depending on 
                 //how you set it up...
@@ -264,10 +266,11 @@ exports.Config = Config;
                 console.log('4--' + __stack[4].getLineNumber())
                 console.log('5--' + __stack[5].getLineNumber())
                 return __stack[OurModDepthLevel].getLineNumber();
-            }
+            },
         });
 
         Object.defineProperty(GLOBAL, '__StringStack', {
+            configurable: true,
             get: function() {
                 var daStack = __stack[OurModDepthLevel];
 

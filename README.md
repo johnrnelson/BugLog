@@ -34,7 +34,7 @@ This is the easy way to test it out once you install it.
         }
     };
     var daLOG = buglog.Config(myconf);
-    buglog.Level.Warn('Ver:'+ process.version);
+    daLOG.Info('Ver:'+ process.version);
 
 
 ## Helpful Links

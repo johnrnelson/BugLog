@@ -240,17 +240,20 @@ var buglogAPI = {
 var Level = {
     Info: function() {
         var dINFO = buglogAPI.NewLog(arguments);
+        dINFO.Level=LogLevels.Info;
 
         buglogAPI.Dressup(LogLevels.Info, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Warn: function() {
         var dINFO = buglogAPI.NewLog(arguments);
+        dINFO.Level=LogLevels.Warn;
         buglogAPI.Dressup(LogLevels.Warn, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Error: function() {
         var dINFO = buglogAPI.NewLog(arguments);
+        dINFO.Level=LogLevels.Error;
         buglogAPI.Dressup(LogLevels.Error, dINFO);
         buglogAPI.WriteLog(dINFO);
     }

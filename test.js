@@ -9,9 +9,9 @@ var myconf = {
     StackDepth: 3,
     ShowDebugInfo: true,
     OnLog: function(LogRecord) {
-        return;
+        // return;
         console.log('================================================================================');
-        console.log(LogRecord);
+        console.log(LogRecord.Level);
         console.log('================================================================================');
     }
 }

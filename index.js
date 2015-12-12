@@ -83,7 +83,7 @@ var buglogAPI = {
     InspectArgs: function(Args2Inspect, LogRec) {
 
         var argsDisplay = '';
-        var argCntr = 0; 
+        var argCntr = 0;
         if (Args2Inspect.length == 0) {
             LogRec.TrueArgs = [];
             // argsDisplay = buglogAPI.DebugInfo();
@@ -96,13 +96,16 @@ var buglogAPI = {
                 var ITEM = trueArgs[i];
 
                 if (trueArgs.length > 1) {
-                    argsDisplay += '\r\n\t\t====\tARG#:' + argCntr + '\t====\r\n';
+                    argsDisplay += '\r\n\t\t====\tARG#:' + argCntr + '\t====\r\n\t\t';
+                }else{
+                    argsDisplay +='\r\n\t\t' 
                 }
                 if (typeof(ITEM) == 'string') {
-                    argsDisplay += '\r\n\t\t' + ITEM;
+                    argsDisplay += ITEM;
                 }
                 else {
-                    var jsSTR = '\t\t' + JSON.stringify(ITEM, null, "\t");
+                    // var jsSTR = '\r\n' + JSON.stringify(ITEM, null, "\t");
+                    var jsSTR = JSON.stringify(ITEM, null, "\t");
                     argsDisplay += jsSTR.replace(/[\n]/g, '\n\t\t');
                     // argsDisplay += '\r\n' + JSON.stringify(ITEM, null, "\t");
                 };
@@ -150,7 +153,7 @@ var buglogAPI = {
         };
         // return dressedOutput+'/t'+StackRecord.DebugDisplay;
         StackRecord.Display = dressedOutput;
-        
+
     },
     WriteLog: function(LogEntry) {
         //If they want to persist it then this is their chance...
@@ -177,7 +180,7 @@ var buglogAPI = {
 
     },
     GetStack: function(LogEntry) {
-         try { 
+        try {
             var orig = Error.prepareStackTrace;
             Error.prepareStackTrace = function(_, stack) {
                 return stack;
@@ -185,7 +188,7 @@ var buglogAPI = {
             var err = new Error;
             Error.captureStackTrace(err, arguments.callee);
             var stack = err.stack;
-            Error.prepareStackTrace = orig; 
+            Error.prepareStackTrace = orig;
 
             //Find where I am in the stack so I know what to report on...
             function findMe() {
@@ -216,7 +219,7 @@ var buglogAPI = {
                 };
                 return fndStack;
             };
-            LogEntry.Stack = findMe(); 
+            LogEntry.Stack = findMe();
         }
         catch (errInspectStack) {
             LogEntry.err = errInspectStack;
@@ -224,7 +227,7 @@ var buglogAPI = {
     },
     NewLog: function(LogArgs) {
         var dINFO = {};
-        
+
         buglogAPI.GetStack(dINFO);
         buglogAPI.DebugInfo(dINFO);
         buglogAPI.InspectArgs(arguments, dINFO);

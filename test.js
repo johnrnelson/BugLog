@@ -27,7 +27,8 @@ function woot(argument) {
     daLOG.Info('INFO----Server using Node Version  ...');
     daLOG.Warn('Warn----');
     daLOG.Error('Error----');
-    daLOG.Info(myconf, 'grr');
+    daLOG.Info(myconf);
+    daLOG.Info('grrrr','wooot',myconf);
 
 
     // buglog.Level.Warn('Ver:', process.version);

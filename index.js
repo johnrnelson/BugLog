@@ -104,22 +104,20 @@ var buglogAPI = {
                     argsDisplay += ITEM;
                 }
                 else {
-                    // var jsSTR = '\r\n' + JSON.stringify(ITEM, null, "\t");
                     var jsSTR = JSON.stringify(ITEM, null, "\t");
                     argsDisplay += jsSTR.replace(/[\n]/g, '\n\t\t');
-                    // argsDisplay += '\r\n' + JSON.stringify(ITEM, null, "\t");
                 };
                 argCntr++;
             };
         }
-        LogRec.ArgsDisplay = argsDisplay;
-        // return argsDisplay;
+        LogRec.ArgsDisplay = argsDisplay; 
     },
     //make me pretty....
     Dressup: function(TypeOfDress, StackRecord) {
         var dressedOutput = '';
         var ccs = buglogAPI.ColorCodes;
         var dtDisplay = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.Stack.DT)) + '\t';
+        var filePath = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.blue, StackRecord.Stack.FL));
 
 
         if (TypeOfDress == LogLevels.Info) {
@@ -128,6 +126,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.FN)) + '' +
+                filePath + 
                 StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.cyan, StackRecord.ArgsDisplay));
         }
@@ -138,6 +137,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.FN)) + '' +
+                filePath + 
                 StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.green, StackRecord.ArgsDisplay));
         }
@@ -148,6 +148,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.Stack.FN)) + '' +
+                filePath + 
                 StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ArgsDisplay));
         };

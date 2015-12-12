@@ -83,15 +83,14 @@ var buglogAPI = {
     InspectArgs: function(Args2Inspect, LogRec) {
 
         var argsDisplay = '';
-        var argCntr = 0;
-        var trueArgs = arguments[0];
-        if (trueArgs.length == 0) {
+        var argCntr = 0; 
+        if (Args2Inspect.length == 0) {
             LogRec.TrueArgs = [];
             // argsDisplay = buglogAPI.DebugInfo();
         }
         else {
             //we actually only get the first one and go from there.. :-)
-            var trueArgs = arguments[0];
+            var trueArgs = Args2Inspect[0];
             LogRec.TrueArgs = trueArgs;
             for (var i = 0; i < trueArgs.length; i++) {
                 var ITEM = trueArgs[i];
@@ -113,7 +112,55 @@ var buglogAPI = {
         LogRec.ArgsDisplay = argsDisplay;
         // return argsDisplay;
     },
-    InspectStack: function() {
+    //make me pretty....
+    Dressup: function(TypeOfDress, StackRecord) {
+        var dressedOutput = '';
+        var ccs = buglogAPI.ColorCodes;
+        var dtDisplay = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.Stack.DT)) + '\t';
+
+
+        if (TypeOfDress == LogLevels.Info) {
+            dressedOutput = dtDisplay +
+                'LINE#:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
+                '   OBJECT:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.FN)) + '' +
+                StackRecord.DebugDisplay +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.cyan, StackRecord.ArgsDisplay));
+        }
+
+        if (TypeOfDress == LogLevels.Warn) {
+            dressedOutput = dtDisplay +
+                ':   LINE#:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
+                '   OBJECT:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.FN)) + '' +
+                StackRecord.DebugDisplay +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.green, StackRecord.ArgsDisplay));
+        }
+
+        if (TypeOfDress == LogLevels.Error) {
+            dressedOutput = dtDisplay +
+                ':   LINE#:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
+                '   OBJECT:' +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.Stack.FN)) + '' +
+                StackRecord.DebugDisplay +
+                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ArgsDisplay));
+        };
+        // return dressedOutput+'/t'+StackRecord.DebugDisplay;
+        StackRecord.Display = dressedOutput;
+        
+    },
+    WriteLog: function(LogEntry) {
+        //If they want to persist it then this is their chance...
+        // console.log(buglogAPI.DebugInfo()+'\r\n'+LogEntry.Display);
+        console.log(LogEntry.Display);
+        if (ConfigManager.ClientConfig.OnLog) {
+            ConfigManager.ClientConfig.OnLog(LogEntry);
+        }
+    },
+    InspectStack_OLD: function() {
 
         var st = {
 
@@ -129,76 +176,78 @@ var buglogAPI = {
         return st;
 
     },
-    //make me pretty....
-    Dressup: function(TypeOfDress, StackRecord) {
-        var dressedOutput = '';
-        var ccs = buglogAPI.ColorCodes;
-        var dtDisplay = ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.magenta, StackRecord.DT)) + '\t';
+    GetStack: function(LogEntry) {
+         try { 
+            var orig = Error.prepareStackTrace;
+            Error.prepareStackTrace = function(_, stack) {
+                return stack;
+            };
+            var err = new Error;
+            Error.captureStackTrace(err, arguments.callee);
+            var stack = err.stack;
+            Error.prepareStackTrace = orig; 
 
+            //Find where I am in the stack so I know what to report on...
+            function findMe() {
+                var fndStack = {};
+                for (var s = 0; s < stack.length; s++) {
+                    var st = stack[s];
+                    var stLoc = stack[s] + ''; //quick cast...
+                    var FunctionFileSep = stLoc.search(' ');
+                    var fnName = stLoc.substr(0, FunctionFileSep);
 
-        if (TypeOfDress == LogLevels.Info) {
-            dressedOutput = dtDisplay +
-                'LINE#:' +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
-                '   OBJECT:' +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
-                StackRecord.DebugDisplay +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.cyan, StackRecord.ArgsDisplay));
+                    var fileLoc = stLoc.substr(FunctionFileSep + 2, (stLoc.length + 1) - (FunctionFileSep + 2));
+
+                    var filePathEOF = fileLoc.search(':');
+                    var filePath = fileLoc.substr(0, filePathEOF);
+                    // console.log(__filename, filePath);
+                    if (__filename == filePath) {
+                        continue;
+                    }
+                    else {
+                        fndStack = {
+                            DT: new Date().toLocaleTimeString(),
+                            LN: st.getLineNumber(),
+                            FN: fnName,
+                            FL: filePath
+                        };
+                        break;
+                    };
+                };
+                return fndStack;
+            };
+            LogEntry.Stack = findMe(); 
         }
-
-        if (TypeOfDress == LogLevels.Warn) {
-            dressedOutput = dtDisplay +
-                ':   LINE#:' +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
-                '   OBJECT:' +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.FN)) + '' +
-                StackRecord.DebugDisplay +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.green, StackRecord.ArgsDisplay));
-        }
-
-        if (TypeOfDress == LogLevels.Error) {
-            dressedOutput = dtDisplay +
-                ':   LINE#:' +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.LN)) +
-                '   OBJECT:' +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.FN)) + '' +
-                StackRecord.DebugDisplay +
-                ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ArgsDisplay));
+        catch (errInspectStack) {
+            LogEntry.err = errInspectStack;
         };
-        // return dressedOutput+'/t'+StackRecord.DebugDisplay;
-        return dressedOutput;
     },
-    WriteLog: function(LogEntry) {
-        //If they want to persist it then this is their chance...
-        // console.log(buglogAPI.DebugInfo()+'\r\n'+LogEntry.Display);
-        console.log(LogEntry.Display);
-        if (ConfigManager.ClientConfig.OnLog) {
-            ConfigManager.ClientConfig.OnLog(LogEntry);
-        }
+    NewLog: function(LogArgs) {
+        var dINFO = {};
+        
+        buglogAPI.GetStack(dINFO);
+        buglogAPI.DebugInfo(dINFO);
+        buglogAPI.InspectArgs(arguments, dINFO);
+        return dINFO;
     }
 };
 
 
 var Level = {
     Info: function() {
-        var dINFO = buglogAPI.InspectStack();
-        buglogAPI.DebugInfo(dINFO);
-        buglogAPI.InspectArgs(arguments, dINFO);
-        dINFO.Display = buglogAPI.Dressup(LogLevels.Info, dINFO);
+        var dINFO = buglogAPI.NewLog(arguments);
+
+        buglogAPI.Dressup(LogLevels.Info, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Warn: function() {
-        var dINFO = buglogAPI.InspectStack();
-        buglogAPI.DebugInfo(dINFO);
-        buglogAPI.InspectArgs(arguments, dINFO);
-        dINFO.Display = buglogAPI.Dressup(LogLevels.Warn, dINFO);
+        var dINFO = buglogAPI.NewLog(arguments);
+        buglogAPI.Dressup(LogLevels.Warn, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Error: function() {
-        var dINFO = buglogAPI.InspectStack();
-        buglogAPI.DebugInfo(dINFO);
-        buglogAPI.InspectArgs(arguments, dINFO);
-        dINFO.Display = buglogAPI.Dressup(LogLevels.Error, dINFO);
+        var dINFO = buglogAPI.NewLog(arguments);
+        buglogAPI.Dressup(LogLevels.Error, dINFO);
         buglogAPI.WriteLog(dINFO);
     }
 };
@@ -215,11 +264,6 @@ function Config(ConfigOptions, GLOBAL) {
 
     try {
 
-        /*
-            This is where the Magic Happens!!!!
-        */
-
-
     }
     catch (errUnableToDebug) {
         //This might happen when you first warm up!!!
@@ -234,52 +278,48 @@ function Config(ConfigOptions, GLOBAL) {
 exports.Config = Config;
 
 //=====
-        // var OurModDepthLevel = ConfigOptions.StackDepth;
-        var OurModDepthLevel = 3;
+// var OurModDepthLevel = ConfigOptions.StackDepth;
+var OurModDepthLevel = 3;
 
 
-        Object.defineProperty(GLOBAL, '__stack', {
-            configurable: true,
-            
-            get: function() {
-                var orig = Error.prepareStackTrace;
-                Error.prepareStackTrace = function(_, stack) {
-                    return stack;
-                };
-                var err = new Error;
-                Error.captureStackTrace(err, arguments.callee);
-                var stack = err.stack;
-                Error.prepareStackTrace = orig;
-                return stack;
-            },
-        });
 
-        Object.defineProperty(GLOBAL, '__line', {
-            configurable: true,
-            get: function() {
-                //If you work on buglog this number may change depending on 
-                //how you set it up...
-                console.log('OurModDepthLevel-' + OurModDepthLevel)
-                console.log('0--' + __stack[0].getLineNumber())
-                console.log('1--' + __stack[1].getLineNumber())
-                console.log('2--' + __stack[2].getLineNumber())
-                console.log('3--' + __stack[3].getLineNumber())
-                console.log('4--' + __stack[4].getLineNumber())
-                console.log('5--' + __stack[5].getLineNumber())
-                return __stack[OurModDepthLevel].getLineNumber();
-            },
-        });
+// Object.defineProperty(GLOBAL, '__stack', {
+//     configurable: true,
 
-        Object.defineProperty(GLOBAL, '__StringStack', {
-            configurable: true,
-            get: function() {
-                var daStack = __stack[OurModDepthLevel];
+//     get: function() {
+//         var orig = Error.prepareStackTrace;
+//         Error.prepareStackTrace = function(_, stack) {
+//             return stack;
+//         };
+//         var err = new Error;
+//         Error.captureStackTrace(err, arguments.callee);
+//         var stack = err.stack;
+//         Error.prepareStackTrace = orig;
+//         return stack;
+//     },
+// });
 
-                if (!daStack) {
-                    return 'Stack Count:' + __stack.length;
-                }
-                else {
-                    return daStack;
-                };
-            }
-        });
+// Object.defineProperty(GLOBAL, '__line', {
+//     configurable: true,
+//     get: function() {
+//         //If you work on buglog this number may change depending on 
+//         //how you set it up...
+//         // console.log('OurModDepthLevel-' + OurModDepthLevel)
+
+//         return __stack[OurModDepthLevel].getLineNumber();
+//     },
+// });
+
+// Object.defineProperty(GLOBAL, '__StringStack', {
+//     configurable: true,
+//     get: function() {
+//         var daStack = __stack[OurModDepthLevel];
+
+//         if (!daStack) {
+//             return 'Stack Count:' + __stack.length;
+//         }
+//         else {
+//             return daStack;
+//         };
+//     }
+// });

@@ -97,20 +97,28 @@ var buglogAPI = {
 
                 if (trueArgs.length > 1) {
                     argsDisplay += '\r\n\t\t====\tARG#:' + argCntr + '\t====\r\n\t\t';
-                }else{
-                    argsDisplay +='\r\n\t\t' 
+                }
+                else {
+                    argsDisplay += '\r\n\t\t'
                 }
                 if (typeof(ITEM) == 'string') {
                     argsDisplay += ITEM;
                 }
                 else {
-                    var jsSTR = JSON.stringify(ITEM, null, "\t");
-                    argsDisplay += jsSTR.replace(/[\n]/g, '\n\t\t');
+                    try {
+
+                        var jsSTR = JSON.stringify(ITEM, null, "\t");
+                        argsDisplay += jsSTR.replace(/[\n]/g, '\n\t\t');
+
+                    }
+                    catch (errSerialize) {
+                        argsDisplay += '';
+                    }
                 };
                 argCntr++;
             };
         }
-        LogRec.ArgsDisplay = argsDisplay; 
+        LogRec.ArgsDisplay = argsDisplay;
     },
     //make me pretty....
     Dressup: function(TypeOfDress, StackRecord) {
@@ -126,7 +134,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.FN)) + '' +
-                filePath + 
+                filePath +
                 StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.cyan, StackRecord.ArgsDisplay));
         }
@@ -137,7 +145,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.FN)) + '' +
-                filePath + 
+                filePath +
                 StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.green, StackRecord.ArgsDisplay));
         }
@@ -148,7 +156,7 @@ var buglogAPI = {
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.yellow, StackRecord.Stack.LN)) +
                 '   OBJECT:' +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.Stack.FN)) + '' +
-                filePath + 
+                filePath +
                 StackRecord.DebugDisplay +
                 ccs._.UserColor(ccs.bold, ccs._.UserColor(ccs.red, StackRecord.ArgsDisplay));
         };
@@ -240,20 +248,20 @@ var buglogAPI = {
 var Level = {
     Info: function() {
         var dINFO = buglogAPI.NewLog(arguments);
-        dINFO.Level=LogLevels.Info;
+        dINFO.Level = LogLevels.Info;
 
         buglogAPI.Dressup(LogLevels.Info, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Warn: function() {
         var dINFO = buglogAPI.NewLog(arguments);
-        dINFO.Level=LogLevels.Warn;
+        dINFO.Level = LogLevels.Warn;
         buglogAPI.Dressup(LogLevels.Warn, dINFO);
         buglogAPI.WriteLog(dINFO);
     },
     Error: function() {
         var dINFO = buglogAPI.NewLog(arguments);
-        dINFO.Level=LogLevels.Error;
+        dINFO.Level = LogLevels.Error;
         buglogAPI.Dressup(LogLevels.Error, dINFO);
         buglogAPI.WriteLog(dINFO);
     }

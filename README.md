@@ -39,5 +39,3 @@ This is the easy way to test it out once you install it.
 
 ## Helpful Links
 http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
-
-   

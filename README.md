@@ -13,8 +13,6 @@ My replacement for console.log
 Easy debug code. :-)
 
 
-
- 
 ## Installing
 Good old NPM to the resuce! 
 

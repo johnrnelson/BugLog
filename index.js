@@ -224,7 +224,7 @@ var buglogAPI = {
                             DT: new Date().toLocaleTimeString(),
                             LN: st.getLineNumber(),
                             FN: fnName,
-                            FL: filePath.replace(ConfigManager.ClientConfig.RootFolder,'>')
+                            FL: filePath.replace(ConfigManager.ClientConfig.RootFolder,' ')
                         };
                         break;
                     }; 

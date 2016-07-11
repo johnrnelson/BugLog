@@ -6,11 +6,11 @@
 
 
 var myconf = {
-    StripPath:__dirname,
+    RootFolder: __dirname,
     StackDepth: 3,
     ShowDebugInfo: true,
     OnLog: function(LogRecord) {
-        // return;
+        return;
         console.log('================================================================================');
         console.log(LogRecord.Level);
         console.log('================================================================================');

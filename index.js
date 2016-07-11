@@ -224,7 +224,7 @@ var buglogAPI = {
                             DT: new Date().toLocaleTimeString(),
                             LN: st.getLineNumber(),
                             FN: fnName,
-                            FL: filePath.replace(ConfigManager.ClientConfig.StripPath,'>')
+                            FL: filePath.replace(ConfigManager.ClientConfig.RootFolder,'>')
                         };
                         break;
                     }; 
@@ -281,9 +281,6 @@ var ConfigManager = {
 //If they give us a config then they can get our methods.. 
 function Config(ConfigOptions, GLOBAL) {
     ConfigManager.ClientConfig = ConfigOptions;
-    if(!ConfigManager.ClientConfig.StripPath){
-        ConfigManager.ClientConfig.StripPath = '';
-    }
 
     try {
 

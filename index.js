@@ -212,6 +212,9 @@ var buglogAPI = {
 
                     var filePathEOF = fileLoc.search(':');
                     var filePath = fileLoc.substr(0, filePathEOF);
+                    
+                    filePath = filePath.replace(__dirname,'>');
+                    
                     // console.log(__filename, filePath);
                     if (__filename == filePath) {
                         continue;

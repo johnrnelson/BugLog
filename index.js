@@ -211,7 +211,7 @@ var buglogAPI = {
                     var fileLoc = stLoc.substr(FunctionFileSep + 2, (stLoc.length + 1) - (FunctionFileSep + 2));
 
                     var filePathEOF = fileLoc.search(':');
-                    var filePath = fileLoc.substr(0, filePathEOF);
+                    var filePath = fileLoc.substr(0, filePathEOF).replace(ConfigManager.ClientConfig.RootFolder,'>');
                     
                     // console.log(__filename, filePath);
                     
@@ -224,7 +224,7 @@ var buglogAPI = {
                             DT: new Date().toLocaleTimeString(),
                             LN: st.getLineNumber(),
                             FN: fnName,
-                            FL: filePath.replace(ConfigManager.ClientConfig.RootFolder,'>')
+                            FL: filePath
                         };
                         break;
                     }; 

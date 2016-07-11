@@ -281,6 +281,9 @@ var ConfigManager = {
 //If they give us a config then they can get our methods.. 
 function Config(ConfigOptions, GLOBAL) {
     ConfigManager.ClientConfig = ConfigOptions;
+    if(!ConfigManager.ClientConfig.StripPath){
+        ConfigManager.ClientConfig.StripPath = '';
+    }
 
     try {
 

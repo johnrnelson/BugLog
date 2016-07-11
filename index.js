@@ -224,10 +224,12 @@ var buglogAPI = {
                             DT: new Date().toLocaleTimeString(),
                             LN: st.getLineNumber(),
                             FN: fnName,
-                            FL: filePath.replace(__dirname,'>')
+                            FL: filePath.replace(ConfigManager.ClientConfig.StripPath,'>')
                         };
                         break;
-                    };
+                    }; 
+                    
+                    
                 };
                 return fndStack;
             };

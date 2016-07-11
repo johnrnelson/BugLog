@@ -6,6 +6,7 @@
 
 
 var myconf = {
+    StripPath:__dirname,
     StackDepth: 3,
     ShowDebugInfo: true,
     OnLog: function(LogRecord) {
